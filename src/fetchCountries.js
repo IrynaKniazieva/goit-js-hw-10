@@ -11,4 +11,4 @@ function fetchCountries(name) {
     }
     return response.json();
   });
-}
+};

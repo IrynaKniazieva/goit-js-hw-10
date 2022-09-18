@@ -11,55 +11,80 @@ const refs = {
     countryList: document.querySelector('.country-list'),
 }
 
-// refs.search.addEventListener('input', _.debounce(onSearch, DEBOUNCE_DELAY));
-refs.search.addEventListener('input', onSearch);
+// функция для названия страны и флага
+function createCountryList(countries) {
+    const countryList = countries.map(country => {
+        return `<li>
+        <img src='${country.flags.svg}' alt='${country.name.official}' width='50' height ='50'/>
+        <h2>class=country-name ${country.name.official}</h2>
+        </li>`;
+    }).join('');
+
+    rest.countryList.innerHTML = countryList;
+}
+
+// функция которая создает разметку для инфо страны
+function createCountryInfo(countries) {
+    const countryInfo = countries.map(country => {
+        return `<div>
+        <img src='${country.flags.svg}' alt='${country.name.official}' width='50' height ='50'/>
+        <h2>class=country-name ${country.name.official}</h2>
+        </div>
+        <ul>
+        <li>
+        <p>Capital: <span>${country.capital}<span></p>
+        </li>
+        <li>
+        <p>Population: <span>${country.population}<span></p>
+        </li>
+        <li>
+        <p>Languages: <span>${country.languages}<span></p>
+        </li>
+        </ul>`;
+    }).join('');
+
+// вешаем разметку
+    refs.countryInfo.innerHTML = countryInfo;
+}
+
+
+refs.search.addEventListener('input', debounce (onSearch, DEBOUNCE_DELAY));
 
 
 
 function onSearch (evt) {
-    const country = evt.target.value.toLowerCase().trim();
+    evt.preventDefault()
+    const country = evt.target.value.trim();
 
-    clearCountryList();
-    fetchCountries(name)
+    
+    fetchCountries(country)
     .then((countries) => {
         if (countries.length > 10) {
-            return Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
-        };
-        if (countries.length === 1) {
-            return createCountryList(countries)
+            clearCountryList()
+            clearCountryInfo()
+            Notiflix.Notify.info('Too many matches found. Please enter a more specific name.')
         }
+        if (countries.length >= 2 && countries.length < 10) {
+            createCountryList(countries);
+            clearCountryInfo()
+        }
+        if (countries.length === 1) {
+            createCountryInfo(countries);
+            clearCountryList()
 
-        console.log(countries);
-        return countries;
+       }
     })
-    .then(clearCountryList)
+    .then()
     .catch(onError);
-}
-let capital = resault[0].capital.join(', ');
-let languages = Object.values(resault[0].languages).join(', ');
-let res = resault[0];
-
-// функция которая создает разметку
-function createCountryList(){
-return refs.countryInfo.innerHTML = `<div>
-<img class=country-img src='${res.flags.svg}' alt='${res.name.official}' width='50'/>
-<h2>${res.name.official}</h2>
-</div>
-<ul>
-<li>
-<p>Capital: <span>${capital}<span></p>
-</li>
-<li>
-<p>Population: <span>${res.population}<span></p>
-</li>
-<li>
-<p>Languages: <span>${languages}<span></p>
-</li>
-</ul>
-`;
 }
 
 // Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка списка стран или информации о стране пропадает.
+function clearCountryInfo(){
+    refs.countryInfo.innerHTML = '';
+}
+
+
+// Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка для названия страны и флага пропадает
 function clearCountryList(){
     refs.countryList.innerHTML = '';
 }
