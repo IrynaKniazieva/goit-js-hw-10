@@ -42,10 +42,9 @@ function onSearch (evt) {
 // функция для названия страны и флага
 function createCountryList(countries) {
     const countryList = countries.map(country => {
-        return `<li>
-        <span>
-          <img width="60px" height="30px"  src="${country.flags.svg}">
-          </span> ${country.name.official}
+        return `<li class=country-item>
+        <img src='${country.flags.svg}' alt='${country.name.official}' width='50' height ='50'/>
+        <h2 class=country-name> ${country.name.official}</h2>
         </li>`;
     }).join('');
 
@@ -56,19 +55,19 @@ function createCountryList(countries) {
 // функция которая создает разметку для инфо страны
 function createCountryInfo(countries) {
     const countryInfo = countries.map(country => {
-        return `<div>
+        return `<div class=country>
         <img src='${country.flags.svg}' alt='${country.name.official}' width='50' height ='50'/>
-        <h2> ${country.name.official}</h2>
+        <h2 class=country-name> ${country.name.official}</h2>
         </div>
         <ul>
-        <li>
-        <p>Capital: <span>${country.capital}<span></p>
+        <li class=country-item>
+        <p class=country-item__article>Capital: <span class=country-item__span>${country.capital}<span></p>
         </li>
-        <li>
-        <p>Population: <span>${country.population}<span></p>
+        <li class=country-item>
+        <p class=country-item__article>Population: <span class=country-item__span>${country.population}<span></p>
         </li>
-        <li>
-        <p>Languages: <span>${Object.values(country.languages).join('')}<span></p>
+        <li class=country-item>
+        <p class=country-item__article>Languages: <span class=country-item__span>${Object.values(country.languages).join('')}<span></p>
         </li>
         </ul>`;
     }).join('');
