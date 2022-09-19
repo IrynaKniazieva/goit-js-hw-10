@@ -36,6 +36,7 @@ align-items: center;
 }
 
 .country-item__article {
+  margin-top: 0;
   font-size: 20px;
   font-weight: 700;
 }
