@@ -19,25 +19,32 @@ refs.search.addEventListener('input', debounce (onSearch, DEBOUNCE_DELAY));
 function onSearch (evt) {
     evt.preventDefault()
     const searchCountry = evt.target.value.trim();
-   
-    clearCountryInfo();
-    clearCountryList();
+
+    if (!searchCountry) {
+        clearCountryInfo();
+        clearCountryList();
+        return;  
+        }
 
     fetchCountries(searchCountry)
-        .then(countries => {
-            if (countries.length > 10) {
-                    Notiflix.Notify.info(
-                  'Too many matches found. Please enter a more specific name.'
-                );
-              } else if (countries.length > 2 && countries.length < 10) {
-                createCountryList(countries)
-             } else {
-                createCountryInfo(countries)
-              }
-        })
-        .catch(onError);
+        .then(onCountry)
+        .catch(onError)
     }  
+// функция для ввода названия страны в инпут
+function onCountry (countries) {
+        clearCountryInfo();
+        clearCountryList();
 
+        if (countries.length > 10) {
+            Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      } else if (countries.length > 2 && countries.length < 10) {
+        createCountryList(countries)
+     } else {
+        createCountryInfo(countries)
+      }
+    }
 
 // функция для названия страны и флага
 function createCountryList(countries) {
@@ -78,13 +85,13 @@ function createCountryInfo(countries) {
 }
 
 
-// // Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка списка стран или информации о стране пропадает.
+// // // Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка списка стран или информации о стране пропадает.
 function clearCountryInfo(){
     refs.countryInfo.innerHTML = '';
 }
 
 
-// // Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка для названия страны и флага пропадает
+// // // Если пользователь полностью очищает поле поиска, то HTTP-запрос не выполняется, а разметка для названия страны и флага пропадает
 function clearCountryList(){
     refs.countryList.innerHTML = '';
 }
